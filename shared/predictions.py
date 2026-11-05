@@ -4,8 +4,8 @@ Format (handover B4): one row per candidate with columns
 row_id, model_id, config_id, predicted_score. Labels, impression ids and cold
 tags are joined later from meta_{split}.parquet on row_id, never stored here.
 
-Synthetic and real outputs are kept apart three ways: a separate folder, a
-REAL__/SYNTHETIC__ filename prefix, and a data_kind entry in the parquet metadata.
+Each file records its data kind three ways: the predictions/real/ folder, a
+REAL__ filename prefix, and a data_kind entry in the parquet metadata.
 """
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 PRED_COLUMNS = ["row_id", "model_id", "config_id", "predicted_score"]
-DATA_KINDS = ("REAL", "SYNTHETIC")
+DATA_KINDS = ("REAL",)
 
 
 def prediction_path(root: str, data_kind: str, model_id: str, config_id: str, split: str) -> str:

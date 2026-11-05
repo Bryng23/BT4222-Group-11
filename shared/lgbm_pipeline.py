@@ -119,7 +119,7 @@ def impression_groups(meta: pd.DataFrame) -> np.ndarray:
 # Training
 # ---------------------------------------------------------------------------
 BASE_PARAMS = {
-    "objective": "binary",
+    "objective": "lambdarank",   # main model; pass {"objective": "binary"} for the probability comparison
     "learning_rate": 0.05,
     "feature_fraction": 0.8,
     "bagging_fraction": 0.8,
@@ -142,9 +142,13 @@ def param_id(p: dict) -> str:
 
 def fit(x_tr, y_tr, x_va, y_va, params: dict, *, seed: int = 4222, max_rounds: int = 2000, early_stop: int = 100,
         group_tr=None, group_va=None) -> lgb.Booster:
-    """Train with early stopping on validation AUC (binary) or nDCG@10 (lambdarank)."""
+    """Train with early stopping on validation nDCG@10 (lambdarank) or AUC (binary).
+
+    LambdaRank needs impression group sizes for both sets (see impression_groups).
+    """
     p = {**BASE_PARAMS, **params, "seed": seed, "deterministic": True, "force_row_wise": True}
     if p["objective"] == "lambdarank":
+        assert group_tr is not None and group_va is not None, "lambdarank needs group_tr and group_va"
         p.update({"metric": "ndcg", "eval_at": [10]})
     else:
         p.setdefault("metric", "auc")

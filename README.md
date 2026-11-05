@@ -10,7 +10,7 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `step2_feature_engineering.ipynb` | Andrew | Feature tables per schema contract v0.1 |
 | `step3a_simple_baselines.ipynb` | Bryan | Random, popularity, category CTR, candidate and content smoothed CTR; controlled smoothing comparison |
 | `step3b_nrms_g10.ipynb` | Bryan | Group 10's NRMS-inspired model, corrected reimplementation (GPU runtime) |
-| `step4_advanced_model.ipynb` | Bryan | LightGBM hybrid model: tuning, scoring, baseline comparison, LambdaRank comparison |
+| `step4_advanced_model.ipynb` | Bryan | LightGBM hybrid model (LambdaRank): tuning, scoring, baseline comparison, binary-objective comparison |
 | `step5_ablation_study.ipynb` | Bryan / Shi Ting | Feature-group ablations, each retrained from scratch |
 | `step6_evaluation_diagnostics.ipynb` | Shi Ting | Metrics, cold/warm segments, diagnostics |
 | `shared/schema.py` | all | Contract constants, column dtypes, file layout |

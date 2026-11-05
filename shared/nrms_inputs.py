@@ -94,17 +94,11 @@ def _minilm(device):
 def encode_texts(texts, method: str = "minilm", device=None) -> np.ndarray:
     """L2-normalised 384-d sentence vectors.
 
-    minilm    : all-MiniLM-L6-v2, the encoder Group 10 used for titles, abstracts and NER phrases.
-    tfidf_svd : offline stand-in used only for synthetic test runs (no model download).
+    minilm : all-MiniLM-L6-v2, the encoder Group 10 used for titles, abstracts and NER phrases.
     """
     texts = [t if isinstance(t, str) else "" for t in texts]
     if method == "minilm":
         vecs = _minilm(device).encode(texts, batch_size=128, convert_to_numpy=True, show_progress_bar=True)
-    elif method == "tfidf_svd":
-        x = TfidfVectorizer().fit_transform(texts)
-        k = min(384, x.shape[1] - 1, x.shape[0] - 1)
-        vecs = np.zeros((len(texts), 384), np.float32)
-        vecs[:, :k] = TruncatedSVD(k, random_state=0).fit_transform(x)
     else:
         raise ValueError(method)
     return _l2(np.asarray(vecs, np.float32))
@@ -129,8 +123,8 @@ def _clean_phrases(phrases):
 
 def ner_phrases(texts, method: str = "spacy") -> list[list[str]]:
     """spaCy en_core_web_sm entity strings per text, de-duplicated case-insensitively."""
-    if method == "none":
-        return [[] for _ in texts]
+    if method != "spacy":
+        raise ValueError(method)
     import spacy
     nlp = spacy.load("en_core_web_sm", disable=["parser", "lemmatizer"])
     docs = nlp.pipe((t.strip() if isinstance(t, str) else "" for t in texts), batch_size=512)
