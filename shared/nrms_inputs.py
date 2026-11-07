@@ -338,9 +338,10 @@ def build_inputs(raw_dir: str, meta: dict, text_method="minilm", ner_method="spa
     # training samples: each click with 4 non-clicked candidates from the same impression
     rng = np.random.default_rng(seed)
     tr = meta["train"]
-    s_imp, s_cand, s_target, s_rec = [], [], [], []
+    s_imp, s_cand, s_target, s_rec, s_row = [], [], [], [], []
     tr_rec = recency(tr)
-    for imp_id, g in tr.assign(rec=tr_rec).groupby("impression_id", sort=False):
+    tr_pos = np.arange(len(tr))   # position of each row in meta["train"], used to fetch its feature row
+    for imp_id, g in tr.assign(rec=tr_rec, _pos=tr_pos).groupby("impression_id", sort=False):
         pos, neg = g[g["label"] == 1], g[g["label"] == 0]
         if len(neg) == 0:
             continue
@@ -348,12 +349,15 @@ def build_inputs(raw_dir: str, meta: dict, text_method="minilm", ner_method="spa
             pick = rng.choice(len(neg), N_NEG, replace=len(neg) < N_NEG)
             ids = [p["news_id"]] + neg["news_id"].iloc[pick].tolist()
             rec = [p["rec"]] + neg["rec"].iloc[pick].tolist()
+            rows = [p["_pos"]] + neg["_pos"].iloc[pick].tolist()
             perm = rng.permutation(N_NEG + 1)
             s_imp.append(imp_pos[imp_id])
             s_cand.append(nid2idx[[ids[j] for j in perm]].to_numpy())
             s_rec.append(np.asarray(rec, np.float32)[perm])
+            s_row.append(np.asarray(rows, np.int64)[perm])
             s_target.append(int(np.flatnonzero(perm == 0)[0]))
-    samples = {"imp": np.asarray(s_imp), "cand": np.stack(s_cand), "target": np.asarray(s_target), "recency": np.stack(s_rec)}
+    samples = {"imp": np.asarray(s_imp), "cand": np.stack(s_cand), "target": np.asarray(s_target), "recency": np.stack(s_rec),
+               "row": np.stack(s_row)}
 
     # user features: fitted on training samples (one row per click, as Group 10), applied to all impressions
     train_rows = beh.iloc[samples["imp"]].reset_index(drop=True)

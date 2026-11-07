@@ -10,8 +10,10 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `step2_feature_engineering.ipynb` | Andrew | Feature tables per schema contract v0.1 |
 | `step3a_simple_baselines.ipynb` | Bryan | Random, popularity, category CTR, candidate and content smoothed CTR; controlled smoothing comparison |
 | `step3b_nrms_g10.ipynb` | Bryan | Group 10's NRMS-inspired model, corrected reimplementation (GPU runtime) |
-| `step4_advanced_model.ipynb` | Bryan | LightGBM hybrid model (LambdaRank): tuning, scoring, baseline comparison, binary-objective comparison |
-| `step5_ablation_study.ipynb` | Bryan / Shi Ting | Feature-group ablations, each retrained from scratch |
+| `step3c_lightgbm.ipynb` | Bryan | LightGBM (LambdaRank), the strongest non-deep comparison: tuning, scoring, binary-objective comparison |
+| `step3d_lightgbm_ablation.ipynb` | Bryan | LightGBM feature-group ablations, each retrained from scratch |
+| `step4_deep_hybrid.ipynb` | Bryan | **Main model**: Group 10's attention network + engineered-feature tower + ID embedding with ID masking (GPU runtime) |
+| `step5_deep_ablation.ipynb` | Bryan / Shi Ting | Ablations of the main model, resumable across Colab sessions (GPU runtime) |
 | `step6_evaluation_diagnostics.ipynb` | Shi Ting | Metrics, cold/warm segments, diagnostics |
 | `shared/schema.py` | all | Contract constants, column dtypes, file layout |
 | `shared/feature_groups.py` | all | Ablation group membership |
@@ -20,8 +22,9 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `shared/selection.py` | all | Validation selection rule shared by every tuned model |
 | `shared/lgbm_pipeline.py` | Bryan | Train-only PCA, design matrices, LightGBM training |
 | `shared/nrms_inputs.py`, `shared/nrms_g10.py` | Bryan | Inputs and model for the Group 10 reimplementation |
+| `shared/hybrid_model.py` | Bryan | Main deep model: feature tower, GMF term, ID masking, training loop, attention read-out |
 
-Run order: steps 1–2 (features) → 3a, 3b → 4 → 5 → 6. Step 5 reads the tree settings that step 4 saves on Drive.
+Run order: steps 1–2 (features) → 3a, 3b, 3c → 3d → 4 → 5 → 6. Step 3d reads the tree settings step 3c saves; step 4 reuses the MiniLM/spaCy cache step 3b writes; step 5 compares against step 4's predictions.
 
 ## Running in Colab
 
