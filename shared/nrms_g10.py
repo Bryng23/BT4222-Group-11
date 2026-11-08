@@ -7,8 +7,9 @@ news inputs are gathered from on-device tensors by index instead of being stacke
 sample in Python, and the user encoder receives already-encoded history vectors.
 
 Training follows their loop (Adam, lr 5e-4, batch 32, 10 epochs, cross-entropy over one
-click and four sampled non-clicks) with two corrections: seeds are fixed, and the epoch
-with the best validation score is restored before anything is scored for test.
+click and four sampled non-clicks) with two procedural differences, so the baseline is treated
+like our own models: seeds are fixed, and the epoch with the best validation score is restored
+before anything is scored for test.
 """
 from __future__ import annotations
 

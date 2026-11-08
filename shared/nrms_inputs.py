@@ -1,9 +1,10 @@
-"""Inputs for the corrected reimplementation of Group 10's NRMS-inspired hybrid model.
+"""Inputs for Group 10's NRMS-inspired hybrid model (the past-project baseline), rebuilt from the raw MIND files.
 
 Group 10 (github.com/bt422210/BT4222-Group-10, commit 3007ee3) built these inputs
 across 1_data_preprocess, 1.1_news_embeddings, 1.2_entity_embeddings and
-3_feature_engineering. This module rebuilds the same inputs with the same
-recipes, and changes only what was a bug or a split-boundary artefact:
+3_feature_engineering, storing them on their own Google Drive. This module rebuilds
+the same inputs with the same recipes. Joins are by key, so the issues step 3b
+lists for their position-based joins do not arise here:
 
 * every input is joined by impression_id / news index, never by row position;
 * recency uses the article's first exposure anywhere in the log before t
