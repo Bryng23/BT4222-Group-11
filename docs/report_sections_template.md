@@ -333,7 +333,7 @@ Removing each component changes test nDCG@10 by (variant minus full; negative = 
 
 ### Step 2: cold vs warm (layer 2). This is the second half of the research question
 
-| Component | Cold Recall@10, validation | Cold Recall@10, test | Reading (test) | Warm Recall@10, test | Reading (warm) | Zero-exposure Recall@10, test |
+| Component | Cold Recall@10, validation (variant − full) | Cold Recall@10, test (contribution) | Reading (test) | Warm Recall@10, test | Reading (warm) | Zero-exposure Recall@10, test |
 |---|---|---|---|---|---|---|
 | Candidate-aware attention | {{ablation.val.no_candidate_attention_vs_full.cold_recall@10}} {{ablation.val.no_candidate_attention_vs_full.cold_recall@10.ci}} | {{rq.tier.CA.cold_recall@10}} {{rq.tier.CA.cold_recall@10.ci}} | {{rq.tier.CA.cold_recall@10.reading}} | {{rq.tier.CA.warm_recall@10}} {{rq.tier.CA.warm_recall@10.ci}} | {{rq.tier.CA.warm_recall@10.reading}} | {{rq.tier.CA.zero_recall@10}} |
 | ID masking | {{ablation.val.no_id_masking_vs_full.cold_recall@10}} {{ablation.val.no_id_masking_vs_full.cold_recall@10.ci}} | {{rq.tier.IDM.cold_recall@10}} {{rq.tier.IDM.cold_recall@10.ci}} | {{rq.tier.IDM.cold_recall@10.reading}} | {{rq.tier.IDM.warm_recall@10}} {{rq.tier.IDM.warm_recall@10.ci}} | {{rq.tier.IDM.warm_recall@10.reading}} | {{rq.tier.IDM.zero_recall@10}} |
@@ -342,7 +342,7 @@ Removing each component changes test nDCG@10 by (variant minus full; negative = 
 | T3 explicit content | {{ablation.val.no_t3_vs_full.cold_recall@10}} {{ablation.val.no_t3_vs_full.cold_recall@10.ci}} | {{rq.tier.T3.cold_recall@10}} {{rq.tier.T3.cold_recall@10.ci}} | {{rq.tier.T3.cold_recall@10.reading}} | {{rq.tier.T3.warm_recall@10}} {{rq.tier.T3.warm_recall@10.ci}} | {{rq.tier.T3.warm_recall@10.reading}} | {{rq.tier.T3.zero_recall@10}} |
 | U reader match | {{ablation.val.no_u_vs_full.cold_recall@10}} {{ablation.val.no_u_vs_full.cold_recall@10.ci}} | {{rq.tier.U.cold_recall@10}} {{rq.tier.U.cold_recall@10.ci}} | {{rq.tier.U.cold_recall@10.reading}} | {{rq.tier.U.warm_recall@10}} {{rq.tier.U.warm_recall@10.ci}} | {{rq.tier.U.warm_recall@10.reading}} | {{rq.tier.U.zero_recall@10}} |
 
-(Validation column is variant minus full; test columns are contributions, full minus variant. Table `rq_part2_tier_contributions`.)
+(The validation column is variant minus full, so a **negative** value means the component helps; the test columns are contributions, full minus variant, so a **positive** value means it helps. Table `rq_part2_tier_contributions`.)
 
 ### Step 3: where on the exposure axis (layer 2, finer)
 
