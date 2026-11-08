@@ -14,7 +14,7 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `step3d_lightgbm_ablation.ipynb` | Bryan | LightGBM feature-group ablations, each retrained from scratch |
 | `step4_deep_hybrid.ipynb` | Bryan | **Main model**: Group 10's attention network + engineered-feature tower + ID embedding with ID masking (GPU runtime) |
 | `step5_deep_ablation.ipynb` | Bryan / Shi Ting | Ablations of the main model, resumable across Colab sessions (GPU runtime) |
-| `step6_evaluation_diagnostics.ipynb` | Shi Ting | Metrics, cold/warm segments, diagnostics |
+| `step6_evaluation_diagnostics.ipynb` | Shi Ting | Final evaluation of the main model against the baselines and NRMS, its ablations, segments, error analysis and business numbers; fills the report sections (no training) |
 | `shared/schema.py` | all | Contract constants, column dtypes, file layout |
 | `shared/feature_groups.py` | all | Ablation group membership |
 | `shared/derived.py` | Bryan | Smoothed-CTR scores computed from stored columns (β and α tuned without regenerating features) |
@@ -23,8 +23,16 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `shared/lgbm_pipeline.py` | Bryan | Train-only PCA, design matrices, LightGBM training |
 | `shared/nrms_inputs.py`, `shared/nrms_g10.py` | Bryan | Inputs and model for the Group 10 reimplementation |
 | `shared/hybrid_model.py` | Bryan | Main deep model: feature tower, GMF term, ID masking, training loop, attention read-out |
+| `shared/evaluator.py` | Shi Ting | Team evaluator: MIND metrics, cold/warm/zero-exposure recall, cold AUCs, cold-only and popularity-debiased nDCG, slot share, novelty, coverage, lift over random, user-clustered bootstrap |
+| `shared/segments.py` | Shi Ting | Exposure / category / history / slate / hour segments; `evaluate_by(meta, score, by=...)` |
+| `shared/audit.py` | Shi Ting | Independent checks: recomputed cold flags, prediction-file alignment, cold-click support, threshold justification |
+| `shared/diagnostics.py` | Shi Ting | Slot-quota re-ranking, balance rule, stress slates, error analysis, business numbers, ablation helpers |
+| `shared/report_plots.py`, `shared/report_io.py` | Shi Ting | Figure templates; table export and report-template filling |
+| `tests/test_evaluator.py` | Shi Ting | Every metric checked against a brute-force implementation (`python -m pytest tests -q`) |
+| `docs/evaluation_spec.md` | Shi Ting | Evaluation rules step 6 implements |
+| `docs/report_sections_template.md` | Shi Ting | Report sections; step 6 fills every `{{number}}` and writes `step6_outputs/real/report_sections_filled.md` on Drive |
 
-Run order: steps 1–2 (features) → 3a, 3b, 3c → 3d → 4 → 5 → 6. Step 3d reads the tree settings step 3c saves; step 4 reuses the MiniLM/spaCy cache step 3b writes; step 5 compares against step 4's predictions.
+Run order: steps 1–2 (features) → 3a, 3b, 3c → 3d → 4 → 5 → 6. Step 3d reads the tree settings step 3c saves; step 4 reuses the MiniLM/spaCy cache step 3b writes; step 5 compares against step 4's predictions; step 6 reads every prediction file and trains nothing.
 
 ## Running in Colab
 
