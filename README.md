@@ -12,8 +12,6 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `step2_feature_engineering.ipynb` | Preprocessing, temporal split, cold labels and every engineered feature; exports the tables in schema contract v0.1 |
 | `step3a_simple_baselines.ipynb` | Random, popularity, category CTR, candidate and content smoothed CTR; controlled smoothing comparison |
 | `step3b_nrms_g10.ipynb` | Group 10's NRMS-inspired model (the past-project baseline), run on our split (GPU runtime) |
-| `step3c_lightgbm.ipynb` | LightGBM (LambdaRank), the strongest non-deep comparison |
-| `step3d_lightgbm_ablation.ipynb` | LightGBM feature-group ablations, each retrained from scratch |
 | `step4_deep_hybrid.ipynb` | **Main model**: training, scoring, comparison with every baseline, attention read-out (GPU runtime) |
 | `step5_deep_ablation.ipynb` | Ablations of the main model, resumable across Colab sessions (GPU runtime) |
 | `step6_evaluation_diagnostics.ipynb` | Final evaluation: headline table, cold/warm/never-shown recall, robustness, exposure, balance, ablations, segments, error analysis, business numbers; fills the report sections (no training) |
@@ -22,9 +20,8 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `shared/contract_checks.py` | Checks the exported feature tables against the contract |
 | `shared/derived.py` | Smoothed-CTR scores computed from stored columns |
 | `shared/predictions.py` | Writes and reads prediction files (`row_id, model_id, config_id, predicted_score`) |
-| `shared/selection.py` | Validation selection rule shared by the tuned baselines and LightGBM |
+| `shared/selection.py` | Validation selection rule shared by the tuned baselines |
 | `shared/eval_interim.py` | Interim evaluator used for tuning in steps 3–5 |
-| `shared/lgbm_pipeline.py` | Train-only PCA, design matrices, LightGBM training |
 | `shared/nrms_inputs.py`, `shared/nrms_g10.py` | Inputs and model for Group 10's network |
 | `shared/hybrid_model.py` | Main model: feature tower, candidate-aware attention, GMF term, ID masking, training loop, attention read-out |
 | `shared/evaluator.py` | Team evaluator: MIND metrics, cold/warm/never-shown recall, cold AUCs, popularity-debiased nDCG, slot share, coverage, user-clustered bootstrap |
@@ -34,7 +31,17 @@ Does combining candidate behaviour, content-transferred behaviour and pure conte
 | `docs/evaluation_spec.md` | Evaluation rules step 6 implements |
 | `docs/report_sections_template.md`, `docs/report_sections_filled.md` | Report sections; step 6 fills every number |
 
-**Run order:** 1 (exploration only; nothing depends on it) → 2 → 3a, 3b, 3c → 3d → 4 → 5 → 6. Step 3d reads the tree settings step 3c saves; steps 4 and 5 reuse the text-vector cache step 3b writes; step 5 compares against step 4's predictions; step 6 reads every prediction file. Each notebook opens with an *At a glance* table: what it reads and writes, how long it takes, and what must run first.
+**Run order:** 1 (exploration only; nothing depends on it) → 2 → 3a, 3b → 4 → 5 → 6. Steps 4 and 5 reuse the text-vector cache step 3b writes; step 5 compares against step 4's predictions; step 6 reads every prediction file. Each notebook opens with an *At a glance* table: what it reads and writes, how long it takes, and what must run first.
+
+### Supplementary (not part of the report)
+
+A LightGBM ranker was explored before the main model became a deep network. It is kept for reference and is not used in the report's comparisons or in step 6.
+
+| Path | Purpose |
+|---|---|
+| `step3c_lightgbm.ipynb` | LightGBM (LambdaRank) ranker on the same features, with a binary-objective comparison |
+| `step3d_lightgbm_ablation.ipynb` | Its feature-group ablations; reads the tree settings step 3c saves |
+| `shared/lgbm_pipeline.py` | Train-only PCA, design matrices, LightGBM training |
 
 ## Data
 
