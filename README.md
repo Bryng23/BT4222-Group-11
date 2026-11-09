@@ -45,17 +45,20 @@ A LightGBM ranker was explored before the main model became a deep network. It i
 
 ## Data
 
-The feature tables, cached text vectors and prediction files are too large for GitHub (over 100 MB), so they are shared on Google Drive:
+The raw MIND-small files are downloaded automatically by `kagglehub` (`arashnic/mind-news-dataset`). Everything the notebooks produce is too large for GitHub (over 100 MB), so the intermediate data is shared on Google Drive:
 
-**Data.zip:** [Google Drive Link](https://drive.google.com/file/d/1un3fo90WcXV_C96zn5nYDwDJlJwF3lz4/view?usp=sharing)
+**Intermediate data:** [BT4222_G11 folder on Google Drive](https://drive.google.com/drive/folders/1OHrQA62pxxHQHGb0GYHpI89yGB-FLih0)
 
-It unpacks to the layout every notebook reads, under `MyDrive/BT4222_G11/`:
+The notebooks read and write this folder at `MyDrive/BT4222_G11/`:
 
-```
-BT4222_G11/
-├── features/v0.1/      meta_*, features_*, article and user vectors, category maps (step 2)
-├── nrms_cache/real/    MiniLM and spaCy vectors (step 3b; reused by steps 4 and 5)
-└── predictions/real/   one parquet file per model, configuration and split (steps 3a–5)
-```
+| Path | Contents | Written by | Read by |
+|---|---|---|---|
+| `features/v0.1/` | Per-split meta and feature tables (`meta_*`, `features_*`), article and user vectors, category and subcategory maps, `schema_version.json` | step 2 | steps 3a–6 |
+| `nrms_cache/real/` | MiniLM title-and-abstract vectors and entity vectors (`.npz`) | step 3b | steps 3b, 4, 5 |
+| `predictions/real/` | One file per model, configuration and split, named `REAL__<model>__<config>__<split>.parquet`, with columns `row_id, model_id, config_id, predicted_score` | steps 3a–5 | steps 4–6 |
+| `models/real/` | Training histories (validation metrics per epoch) of the step 5 ablation variants | step 5 | reference only |
+| `step6_outputs/real/` | Final evaluation: `tables/`, `figures/`, `report_numbers.json`, `report_sections_filled.md` | step 6 | the report |
+| `Data.zip` | Snapshot of `features/`, `nrms_cache/` and `predictions/` taken before the step 5 ablations; the data-setup cell in step 5 unpacks it | — | step 5 |
+| `BT4222_Group11_Github_repo_notebooks.zip` | Copy of this repository's notebooks | — | — |
 
-The raw MIND-small files are downloaded automatically by `kagglehub` (`arashnic/mind-news-dataset`).
+To run the notebooks in Colab, the folder must sit at `MyDrive/BT4222_G11/` in your own Drive with edit access, because every step from 2 to 6 writes into it. Download the shared folder and upload it to your My Drive as `BT4222_G11`. To re-run from step 5 only, uploading `Data.zip` and running step 5's data-setup cell is enough. Open a notebook from GitHub in Colab (File → Open notebook → GitHub), choose a T4 GPU runtime for steps 3b, 4 and 5, and run all.
